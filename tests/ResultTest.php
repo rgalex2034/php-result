@@ -3,7 +3,7 @@
 require_once __DIR__."/../vendor/autoload.php";
 
 use PHPUnit\Framework\TestCase;
-use ARG\Result;
+use ARG\Result\{Ok, Err, Deferred};
 
 class ResultTest extends TestCase{
 
@@ -16,10 +16,10 @@ class ResultTest extends TestCase{
      */
     public function testOk(){
         $value = "Test value";
-        $result = new Result\Ok($value);
+        $result = new Ok($value);
 
         //Check instance and value
-        $this->assertInstanceOf(Result\Ok::class, $result);
+        $this->assertInstanceOf(Ok::class, $result);
         $this->assertEquals($result->unwrap(), $value);
     }
 
@@ -28,10 +28,10 @@ class ResultTest extends TestCase{
      */
     public function testErr(){
         $error_value = "An error message";
-        $result = new Result\Err($error_value);
+        $result = new Err($error_value);
 
         //Check instance and value
-        $this->assertInstanceOf(Result\Err::class, $result);
+        $this->assertInstanceOf(Err::class, $result);
         $this->assertEquals($result->handle(), $error_value);
 
         //Check exception flow and value
@@ -48,12 +48,12 @@ class ResultTest extends TestCase{
      */
     public function testDefferred(){
         $ok_value = "A valid value";
-        $result = new Result\Deferred(function() use($ok_value){
-            return new Result\Ok($ok_value);
+        $result = new Deferred(function() use($ok_value){
+            return new Ok($ok_value);
         });
 
         //Check instance and value
-        $this->assertInstanceOf(Result\Deferred::class, $result);
+        $this->assertInstanceOf(Deferred::class, $result);
         $this->assertEquals($result->unwrap(), $ok_value);
     }
 
@@ -63,9 +63,9 @@ class ResultTest extends TestCase{
     public function testAnd(){
         $one = 1; $two = 2; $three = 3;
 
-        $ok_one = new Result\Ok($one);
-        $ok_two = new Result\Ok($two);
-        $err_three = new Result\Err($three);
+        $ok_one = new Ok($one);
+        $ok_two = new Ok($two);
+        $err_three = new Err($three);
 
         //All true and
         $result = $ok_one->and($ok_two);
@@ -82,9 +82,9 @@ class ResultTest extends TestCase{
     public function testOr(){
         $one = 1; $two = 2; $three = 3;
 
-        $ok_one = new Result\Ok($one);
-        $ok_two = new Result\Ok($two);
-        $err_three = new Result\Err($three);
+        $ok_one = new Ok($one);
+        $ok_two = new Ok($two);
+        $err_three = new Err($three);
 
         //All true and
         $result = $ok_one->or($ok_two);
