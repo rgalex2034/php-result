@@ -18,6 +18,12 @@ To handle chaining, it provides `and()` and `or()` methods.
  - and($result): If the result is Ok, it returns $result, otherwise it returns itself.
  - or($result): If the result is Ok, it returns itself, otherwise it returns $result.
 
+There is also a `Deferred` class which wraps a `Result` interface and the result is processed in a lazy way.
+It requires a function on it's constructor that must return a Result. The function will be executed once a Deferred result make use
+of any of it's functions mentioned before.
+
+It's useful while chaining results through the `and()` and `or()` methods, as it value is never calculated unless it needs to be processed.
+
 ## Example
 This shows a wrapper to `fopen()` and `fwrite()` which handles errors and throw an exception if something goes wrong on any step.
 ```php
